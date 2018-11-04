@@ -5,8 +5,7 @@ command -> expression
 command -> expression predop expression
 expression -> [expression]
 expression -> compare predop compare
-expression -> compare relop compare
-expression -> operation relop num
+expression -> compare
 operation -> id op operation
 operation -> ( operation )
 operation -> id op num
@@ -14,6 +13,7 @@ operation -> id op id
 compare -> id relop id
 compare -> id relop operation
 compare -> id relop num
+compare-> operation relop mum
 
 
 

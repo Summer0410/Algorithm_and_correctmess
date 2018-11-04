@@ -42,7 +42,6 @@ class ParserBase:
                 return False
        
         if(current == 'EXIST'):
-            print("I came here")
             self.expect(current)#remove current
             current = self.s[0]
             if (self.isIdSequence(current) == True):
@@ -63,18 +62,21 @@ class ParserBase:
             
     def expression(self,s):
         current = self.s[0]
-        if(self.isIdSequence(current) == True):
-            self.expect(current)#remove current
+        if(self.basicCompare(self.s) ==True):
+            self.expect(self.s[0])
             current = self.s[0]
-            if(self.isRelop(current) == True):
-                self.expect(current)#remove current
+            if(self.isPredop(current)==True):
+                self.expect(self.s[0])
                 current = self.s[0]
-                if(self.isIdSequence(current) == True):
+                if(self.compare(self.s)== True):
                     return True
                 else:
                     return False
             else:
                 return False
+
+        if(self.compare(self.s) == True):
+            return True
         if(current == '[' and s[len(self.s)-1]==']' ):
             self.expect(current)#remove current
             self.s.pop()#remove another half bracket
@@ -101,23 +103,81 @@ class ParserBase:
             return self.operation(self.s)
         else:
             return False
-    def compare(self,s):
+    def basicOperation(self, a):
         current = self.s[0]
         if(self.isIdSequence(current) == True):
             self.expect(current)#remove current
             current = self.s[0]
-            if(self.isRelop(current) == True):
+            if(self.isOp(current) == True):
                 self.expect(current)#remove current
                 current = self.s[0]
-                if(self.isIdSequence(current) == True or self.isNumSequence(current) == True):
-                    self.expect(current)#remove current
-                    return (len(self.s) == 0)
-                else:
-                    return(self.operation(self.s))
+                return (self.isIdSequence(current) or self.isNumSequence)
             else:
                 return False
         else:
             return False
+
+    def compare(self,s):
+        current = self.s[0]
+        if(self.isOp(self.s[1])== True):
+            if(self.basicOperation(self.s) == True):
+                self.expect(self.s[0])
+                current = self.s[0]
+                if(self.isRelop(current) == True):
+                    self.expect(current)#remove current
+                    current = self.s[0]
+                    if(self.isNumSequence(current) ==True and len(self.s)==1):
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+        else:
+            if(self.isIdSequence(current) == True):
+                self.expect(current)
+                current = self.s[0]
+                if(self.isRelop(current) == True):
+                    self.expect(current)#remove current
+                    current = self.s[0]
+                    if(self.isIdSequence(current) == True or self.isNumSequence(current) == True):
+                        print("I came to the last...")
+                        self.expect(current)#remove current
+                        return (len(self.s) == 0)
+                    else:
+                        return(self.operation(self.s))
+                else:
+                    return False
+    def basicCompare(self, s):
+        current = self.s[0]
+        if(self.isOp(self.s[1])== True):
+            if(self.basicOperation(self.s) == True):
+                self.expect(self.s[0])
+                current = self.s[0]
+                if(self.isRelop(current) == True):
+                    self.expect(current)#remove current
+                    current = self.s[0]
+                    if(self.isNumSequence(current) ==True):
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+        else:
+            if(self.isIdSequence(current) == True):
+                self.expect(current)
+                current = self.s[0]
+                if(self.isRelop(current) == True):
+                    self.expect(current)#remove current
+                    current = self.s[0]
+                    if(self.isIdSequence(current) == True or self.isNumSequence(current) == True):
+                        print("I came to the last...")
+                        self.expect(current)#remove current
+                        return (len(self.s) == 0)
+                    else:
+                        return(self.operation(self.s))
+                else:
+                    return False
+  
     def isIdSequence(self,currentString):
         isSequence = True
         for l in currentString:
@@ -149,5 +209,5 @@ class ParserBase:
             return False
 
 #test1 = ParserBase(["FORALL", "x","::","x",">","y"])
-test1 = ParserBase(['(','zz','+','y',')'])
-print(test1.operation(test1.s))
+test1 = ParserBase(['y','+','x','>','3','AND','y','=','x'])
+print(test1.expression(test1.s))
