@@ -1,0 +1,19 @@
+command -> FORALL id :: expression
+command -> FORALL id :: [command]
+command -> EXISTS id ::[command]
+command -> expression
+command -> expression predop expression
+expression -> [expression]
+expression -> compare predop compare
+expression -> compare relop compare
+expression -> operation relop num
+operation -> id op operation
+operation -> ( operation )
+operation -> id op num
+operation -> id op id
+compare -> id relop id
+compare -> id relop operation
+compare -> id relop num
+
+
+
