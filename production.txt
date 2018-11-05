@@ -2,10 +2,12 @@ command -> FORALL id :: expression
 command -> FORALL id :: [command]
 command -> EXISTS id ::[command]
 command -> expression
-command -> expression predop expression
+command -> expression predop expression//
 expression -> [expression]
+expression-> expression predop expression
 expression -> compare predop compare
 expression -> compare
+expression -> operation relop operation
 operation -> id op operation
 operation -> ( operation )
 operation -> id op num
