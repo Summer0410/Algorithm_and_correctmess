@@ -17,5 +17,8 @@ compare -> id relop operation
 compare -> id relop num
 compare-> operation relop mum
 
+part(b)
+Simply run Python testCases.py  to see the test results
+
 
 

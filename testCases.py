@@ -1,76 +1,48 @@
-# test cases 
+############################################################################################
+#       Run this script to see the test results                                            #
+#       ie:run in terminal ->Python testCases.py                                                             #
+#                                                                                          #
+############################################################################################
+
+
 from parserBase import ParserBase
-test1 = ParserBase(["x", ">", "y"])
-test2 = ParserBase(["x"])
-test3 = ParserBase(["x", "+", "y"])
-test4 = ParserBase(["x", "+", "y", ">=", "x", "*", "(", "y", "-", "3", ")"])
-test5 = ParserBase(["y", ">", "(", "y", "-", "3", ")"])
-test6 = ParserBase(["x", "<", "y", "AND", "y", "<", "z"])
-test7 = ParserBase(["x", ">", "y", "AND", "[", "y", "=", "z", "OR", "y", "=", "z", "*", "(", "x", "+", "1", ")", "]"])
-test8 = ParserBase(["FORALL", "x", "::", "[", "x", "<", "5", "IMP", "x", "*", "x", "<", "25", "]"])
-test9 = ParserBase(["FORALL", "x", "::", "x", ">", "y"])
-test10 = ParserBase(["FORALL", "x", "::", "[", "x", "AND", "y", "]"])
-test11 = ParserBase(["EXISTS", "y", "::", "[", "FORALL", "x", "::", "x", ">", "y", "]"])
-test12 = ParserBase(["EXISTS", "y", "::", "[", "FORALL", "x", "::", "x", ">", "y"])
-test13 = ParserBase(["x", "+", "y", ">", "yz", "+", "xxx"])
-test14 = ParserBase(["(", "x", "+", "y", ")", "*", "z", ">", "yz", "+", "xxx"])
-test15 = ParserBase(["(", "x", "+", "y", "*", "z", ">", "yz", "+", "xxx"])
-test16 = ParserBase(["x", "+", "(", "y", "*", "z", ")", ">", "yz", "+", "xxx"])
-test17 = ParserBase(["x", "*", "y", "=", "qr"])
-test18 = ParserBase(["x", "y"])
-print("CASE 1")
-print("expected value:True")
-print(test1.command(test1.s))
-print("CASE 2")
-print("expected value:False")
-print(test2.command(test2.s))
-print("CASE 3")
-print("expected value:False")
-print(test3.command(test3.s))
-print("CASE 4")
-print("expected value:True")
-print(test4.command(test4.s))
-print("CASE 5")
-print("expected value:True")
-print(test5.command(test5.s))
-print("CASE 6")
-print("expected value:True")
-print(test6.command(test6.s))
-print("CASE 7")
-print("expected value:True")
-print(test7.command(test7.s))
-test = ParserBase(['y', '=', 'z', '*', '(', 'x', '+', '1', ')'])
-print(test.basicCompare(test.s))
-print("CASE 8")
-print("expected value:True")
-print(test8.command(test8.s))
-print("CASE 9")
-print("expected value:True")
-print(test9.command(test9.s))
-print("CASE 10")
-print("expected value:False")
-print(test10.command(test10.s))
-print("CASE 11")
-print("expected value:True")
-print(test11.command(test11.s))
-print("CASE 12")
-print("expected value:false")
-print(test12.command(test12.s))
-print("CASE 13")
-print("expected value:True")
-print(test13.command(test13.s))
-print("CASE 14")
-print("expected value:True")
-print(test14.command(test14.s))
-print("CASE 15")
-print("expected value:False")
-print(test15.command(test15.s))
-print("CASE 16")
-print("expected value:True")
-print(test16.command(test16.s))
-print("CASE 17")
-print("expected value:True")
-print(test17.command(test17.s))
-print("CASE 18")
-print("expected value:False")
-print(test18.command(test18.s))
+#Main function to test the 18 test cases provided
+def main():
+  testCases = [["x", ">", "y"],
+                ["x"],
+                ["x", "+", "y"],
+                ["x", "+", "y", ">=", "x", "*", "(", "y", "-", "3", ")"],
+                ["y", ">", "(", "y", "-", "3", ")"],
+                ["x", "<", "y", "AND", "y", "<", "z"],
+                ["x", ">", "y", "AND", "[", "y", "=", "z", "OR", "y", "=", "z", "*", "(", "x", "+", "1", ")", "]"],
+                ["FORALL", "x", "::", "[", "x", "<", "5", "IMP", "x", "*", "x", "<", "25", "]"],
+                ["FORALL", "x", "::", "x", ">", "y"],
+                ["FORALL", "x", "::", "[", "x", "AND", "y", "]"],
+                ["EXISTS", "y", "::", "[", "FORALL", "x", "::", "x", ">", "y", "]"],
+                ["EXISTS", "y", "::", "[", "FORALL", "x", "::", "x", ">", "y"],
+                ["x", "+", "y", ">", "yz", "+", "xxx"],
+                ["(", "x", "+", "y", ")", "*", "z", ">", "yz", "+", "xxx"],
+                ["(", "x", "+", "y", "*", "z", ">", "yz", "+", "xxx"],
+                ["x", "+", "(", "y", "*", "z", ")", ">", "yz", "+", "xxx"],
+                ["x", "*", "y", "=", "qr"],
+                ["x", "y"]]
+  expectedValue = [True,False,False,True,True,True,True,True,True,False,True,False,True,True,False,True,True,False]
+  Flag = False
+  for  i in range(0,18):
+    currentTestCase = ParserBase(testCases[i])
+    currentExpectedValue = expectedValue[i]
+    # print("Sim(%s,%s) is %s" %(masterFile,comparingTextfiles[i],sim))
+    print("Case%s :"%(i+1))
+    if(currentExpectedValue==currentTestCase.parse(currentTestCase.s)):
+      print("PASSED")
+    else:
+      print("FAILED")
+      Flag = True
+  if(Flag == True):
+    print("There is test case failed")
+  else:
+    print("All test cases passed")
+
+if __name__ == '__main__':
+  main()
+

@@ -1,30 +1,21 @@
 class ParserBase:
-    """ base class for parsers
-    """
-    
     def __init__(self, code):
         self.s = code   # list of tokens (strings) to be parsed
         self.f = True   # flag set to false if an error occurs
 
     def consume(self):
-        """ remove first item from s
-        """
         self.s = self.s[1:]
 
     def expect(self, a):
-        """ Try to remove a from start of s
-        """
         if (len(self.s) > 0 and a == self.s[0]):
             self.consume()
         else:
             self.f = False
     
     def parse(self,s):
-        """You must overide this method to do the parsing
-        Since this one is not overidden, the parsing fails.
-        """
-        current = s[0]
-        self.f = False
+        return self.command(self.s)
+
+    #The starting non-terminal****************************************************************************
     def command(self,s):
         current = self.s[0]
         if(current == 'FORALL'): 
@@ -40,7 +31,7 @@ class ParserBase:
                     return False
             else:
                 return False
-        if(current == 'EXIST'):
+        if(current == 'EXISTS'):
             self.expect(current)#remove current
             current = self.s[0]
             if (self.isIdSequence(current) == True):
@@ -64,7 +55,7 @@ class ParserBase:
                 return False
         else:
             return (self.expression(self.s))
-            
+#Non-terminal expression**********************************************************************88
     def expression(self,s):
         current = self.s[0]
         if(len(self.s)>1 and self.isRelop(self.s[1])==True):
@@ -77,16 +68,12 @@ class ParserBase:
                         if(current == '['):
                             return(self.expression(self.s))
                         else:
-                            if(self.basicCompare(self.s)== True):
-                                return True
-                            else:
-                                return False
+                            return (self.basicCompare(self.s)== True)
                     else:
                         return False
                 else:
                     return True
         if(current == '[' and s[len(self.s)-1]==']' ):
-           
             self.expect(current)#remove current
             self.s.pop()#remove another half bracket
             return (self.expression(self.s))
@@ -96,21 +83,15 @@ class ParserBase:
             if(self.isRelop(current) == True):
                 self.expect(current)
                 if(len(self.s)>1):
-                    if(self.basicOperation(self.s) == True):
-                        return True
-                    else:
-                        return False
+                    return (self.basicOperation(self.s) == True)
                 else:
                     current= self.s[0]
-                    if(self.isIdSequence (current) == True):
-                        return True
-                    else:
-                        return False
+                    return (self.isIdSequence (current) == True)
             else:
                 return False
         else:
             return False
-        
+#A help function of expression******************************************************************************8
     def basicExpression(self, a):
         current = self.s[0]
         if(self.basicCompare(self.s) ==True):
@@ -119,10 +100,7 @@ class ParserBase:
             if(self.isPredop(current)==True):
                 self.expect(self.s[0])
                 current = self.s[0]
-                if(self.basicCompare(self.s)== True):
-                    return True
-                else:
-                    return False
+                return (self.basicCompare(self.s)== True)
             else:
                 return False
 
@@ -134,7 +112,7 @@ class ParserBase:
             return (self.expression(self.s))
         else:
            return False
-
+# A function to check if the provied string is an opersion--non-Terminal******************************************************8
     def basicOperation(self, a):
         current = self.s[0]
         if(self.isIdSequence(current) == True and len(self.s)>1):
@@ -150,10 +128,7 @@ class ParserBase:
                         self.expect(self.s[0])
                         if(self.basicOperation(self.s) == True and len(self.s) >1):
                             self.expect(self.s[0])
-                            if(self.s[0] == ')'):
-                                return True
-                            else:
-                                return False
+                            return (self.s[0] == ')')
                         else:
                             return False
             else:
@@ -169,18 +144,14 @@ class ParserBase:
                                 else:
                                     if(self.isOp(self.s[0])):
                                         self.expect(self.s[0])
-                                        if(self.isNumSequence(self.s[0]) or self.isIdSequence(self.s[0])):
-                                            return True
-                                        else:
-                                            return False
+                                        return (self.isNumSequence(self.s[0]) or self.isIdSequence(self.s[0]))
                                     else:
                                         return False
                             else:
                                 return False
         else:
             return False
-
-
+#A function to check if a given String is a valid comparison -- non-terninal***************************************************
     def basicCompare(self, s):
         current = self.s[0]
         if(len(self.s)>1 and self.isOp(self.s[1])== True):
@@ -190,10 +161,7 @@ class ParserBase:
                 if(self.isRelop(current) == True):
                     self.expect(current)#remove current
                     current = self.s[0]
-                    if(self.isNumSequence(current) ==True):
-                        return True
-                    else:
-                        return False
+                    return (self.isNumSequence(current) ==True)
                 else:
                     return False
         else:
@@ -212,32 +180,27 @@ class ParserBase:
                     return False
             else:
                 return False
-  
+  # A function to check if a given string is a sequence of id*************************
     def isIdSequence(self,currentString):
         isSequence = True
         for l in currentString:
             if(l.isalpha() == False):
                 isSequence = False
         return isSequence
+  # A function to check if a given string is a sequence of num*************************
     def isNumSequence(self,currentString):
         isSequence = True
         for l in currentString:
             if(l.isdigit() == False):
                 isSequence = False
         return isSequence
-   
+# A function to check if a given string is an operator*********************************
     def isOp(self,currentString):
-        if(currentString == '-'or currentString == '+'or currentString =='*'or currentString=='/'):
-            return True 
-        else:
-            return False
+        return (currentString == '-'or currentString == '+'or currentString =='*'or currentString=='/')
+# A function to check if a given string is a relop********8*****************************
     def isRelop(self,currentString):
-        if(currentString =='>'or currentString=='<'or currentString=='='or currentString=='>='or currentString=='<='):
-            return True
-        else:
-            return False
+        return (currentString =='>'or currentString=='<'or currentString=='='or currentString=='>='or currentString=='<=')
+# A function to check if a given string is a predop****************************************8
     def isPredop(self,currentString):
-        if(currentString == 'AND'or currentString =='OR'or currentString=='IMP'):
-            return True
-        else:
-            return False
+        return (currentString == 'AND'or currentString =='OR'or currentString=='IMP')
+            
